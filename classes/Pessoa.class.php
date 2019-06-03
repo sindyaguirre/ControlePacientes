@@ -46,20 +46,31 @@ class Pessoa {
      * @param type $dado
      * @return type
      */
-    public function querySeleciona($dado) {
+    public function querySeleciona($id) {
         try {
-            $this->idpessoa = $dado;
-            $select = $this->con->conectar()->prepare("SELECT * FROM `pessoa` WHERE `idpessoa = :idpessoa;");
-            $select->bindParam(":idpessoa", $this->idpessoa, PDO::PARAM_INT);
+            $this->idpessoa = $this->objFuncoes->base64($id, 2);
+            $select = $this->con->conectar()->prepare("SELECT * FROM `pessoa` WHERE `idpessoa` = ? ");
+            
+            $result = $select->execute(array($this->idpessoa));
 
-            $select->execute();
-            return $select->fetch();
+            // Verifica se a consulta foi realizada com sucesso
+            if (!$result) {
+                $erro = $select->errorInfo();
+                exit($erro[2]);
+            }
+
+            // Busca os dados da linha encontrada
+
+            $arrayReturn = array(
+                'status' => $status = $result,
+                'arrayDados' => ($status == true ? $select->fetch() : ""));
+            return $arrayReturn;
         } catch (Exception $ex) {
             return "error " . $ex->getMessage();
         }
     }
 
- /**
+    /**
      * 
      * @return type
      */
@@ -109,25 +120,21 @@ class Pessoa {
 
     public function queryUpdate($dados) {
         try {
-            var_dump($dados);
-            die('debug');
-            $this->idpessoa = $dados['idpessoa'];
-            $this->nome = $this->objFuncoes->tratarCaracter($dados['nome'], 1);
-            $this->idtipoPessoa = $dados['idtipoPessoa'];
+            $this->idpessoa = $this->objFuncoes->base64($dados['func'], 2);
+            $this->nome = $dados['nome'];
             $this->dataNascimento = $dados['dataNascimento'];
             $this->sexo = $dados['sexo'];
             $this->cpf = $dados['cpf'];
             $obj = $this->con->conectar()->prepare(
                     "UPDATE `pessoa` SET"
                     . " `nome` = :nome,"
-                    . " `idtipoPessoa` = :idtipoPessoa,"
-                    . "`dataNascimento ` = :dataNascimento "
+                    . "`dataNascimento` = :dataNascimento "
                     . "`sexo` = :sexo"
                     . "`cpf` = :cpf"
-                    . "WHERE `idpessoa ` = :idpessoa;");
+                    . "WHERE `idpessoa` = :idpessoa;");
             $obj->bindParam(":idpessoa", $this->idpessoa, PDO::PARAM_INT);
             $obj->bindParam(":nome", $this->nome, PDO::PARAM_STR);
-            $obj->bindParam(":idtipoPessoa", $this->idtipoPessoa, PDO::PARAM_INT);
+            $obj->bindParam(":dataNascimento", $this->dataNascimento, PDO::PARAM_STR);
             $obj->bindParam(":sexo", $this->sexo, PDO::PARAM_INT);
             $obj->bindParam(":cpf", $this->cpf, PDO::PARAM_INT);
 

@@ -23,16 +23,19 @@ if (isset($_POST['btCadastrar'])) {
 if (isset($_POST['btAlterar'])) {
     //utilizar funcao default
     $arrayResponse = $objPessoa->queryUpdate($_POST);
+    unset($pessoa);
     echo '<script type="text/javascript">alert("' . $arrayResponse['msg'] . '");</script>';
     if ($arrayResponse['status'] == true) {
-        header('location: ?acao=edit&idpessoa=' . $objFuncoes->base64($_POST['idpessoa'], 1));
+        header('location: ?acao=edit&ted=' . $objFuncoes->base64($_POST['idpessoa'], 1));
     }
 }
 
 if (isset($_GET['acao'])) {
     switch ($_GET['acao']) {
 
-        case 'edit': $pessoa = $objPessoa->querySeleciona($_GET['ted']);
+        case 'edit':
+            $arrayReturn = $objPessoa->querySeleciona($_GET['ted']);
+            $pessoa = $arrayReturn['arrayDados'];
 
             break;
         case 'delet':
@@ -46,13 +49,16 @@ if (isset($_GET['acao'])) {
             break;
     }
 }
+
 include 'header.php';
 include 'menu.php';
-
 ?>
 <script>
     $(document).ready(function () {
 
+        if ($("#idpessoa").val()) {
+            $("#formCadastro").css("display", 'inline');
+        }
         $("button#cadastar").click(function (event) {
             $("#formCadastro").css("display", 'inline');
 
@@ -68,10 +74,10 @@ include 'menu.php';
         });
 
         $("table td div[name='lieditar']").click(function (a, b) {
-            
-            
-        location.href = '/ControlePacientes/home.php?acao=edit&ted='+this.id;
-            
+
+
+            location.href = '/ControlePacientes/home.php?acao=edit&ted=' + this.id;
+
         });
     });
 </script>
@@ -89,21 +95,21 @@ include 'menu.php';
             <div class="">
 
                 <label>Nome: </label><br>
-                <input type="text" id="nome" name="nome" required="required" value=""><br>
+                <input type="text" id="nome" name="nome" required="required" value="<?= isset($pessoa['nome']) ? $objFuncoes->tratarCaracter($pessoa['nome'], 2) : "" ?>"><br>
 
                 <label>CPF: </label><br>
-                <input type="text" id="cpf" name="cpf" required="required" value=""><br>
+                <input type="text" id="cpf" name="cpf" required="required" value="<?= isset($pessoa['cpf']) ? $pessoa['cpf'] : "" ?>"><br>
 
                 <label>Data nascimento: </label><br>
-                <input type="date" id="dataNascimento" name="dataNascimento" required="required" value=""><br>
+                <input type="date" id="dataNascimento" name="dataNascimento" required="required" value="<?= isset($pessoa['dataNascimento']) ? $pessoa['dataNascimento']: "" ?>"><br>
 
                 <label>Sexo: </label><br>
-                <select name="sexo" id="idturno">
+                <select name="sexo" id="idsexo">
                     <?php
                     foreach ($objFuncoes->listarSexo(2) as $key => $value) {
+                        $selected = isset($pessoa['sexo']) && $pessoa['sexo'] == $key ? "selected='true'" : false;
                         ?>
-
-                        <option value="<?= $key ?>"><?= $value ?></option>
+                        <option <?= $selected ?> value="<?= $key ?>"><?= $value ?></option>
                     <?php } ?>
                 </select>
             </div>
@@ -112,46 +118,49 @@ include 'menu.php';
                 <input type="submit" name="<?= (isset($_GET['acao']) == 'edit') ? ('btAlterar') : ('btCadastrar') ?>" value="<?= (isset($_GET['acao']) == 'edit') ? ('Alterar') : ('Cadastrar') ?>">
                 <!--CRIAR BOTÃO PARA LIMPAR FORMULARIO, E VOLTAR A TELA INICIAL-->
 
-                <input type="hidden" name="func" value="<?= (isset($sala['idUsuario'])) ? ($objFuncoes->base64($sala['idUsuario'], 1)) : ('') ?>">
+                <input type="hidden" id="idpessoa" name="func" value="<?= (isset($pessoa['idpessoa'])) ? ($objFuncoes->base64($pessoa['idpessoa'], 1)) : ('') ?>">
             </div>
         </div>
     </form>
 </div>
 
 <div class="" style="">
-    <table id="tabelaReservas" class="table tablesorter table-striped tabelaPacientes">
-        <thead>
-            <tr>
-                <th scope="col">Cod</th>
-                <th scope="col">Nome</th>
-                <th scope="col">Data Nascimento</th>
-                <th scope="col">CPF</th>
-                <th scope="col">Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            if (isset($_SESSION['logado']) && $_SESSION['logado'] == true) {
-                foreach ($objPessoa->querySelect() as $rst) {
-                    ?>
-                    <tr>
-                        <td widht="20%" scope='row' ><?php echo isset($rst['idpessoa']) ? $rst['idpessoa'] : "-"; ?></td>
-                        <td widht="25%"><?php echo isset($rst['nome']) ? $objFuncoes->tratarCaracter($rst['nome'], 2) : "-"; ?></td>
-                        <td widht="10%"><?php echo isset($rst['dataNascimento']) ? $rst['dataNascimento'] : "-"; ?></td>
-                        <td widht="25%"><?php echo isset($rst['cpf']) ? $rst['cpf'] : "-"; ?></td>
-                        <td widht="20%">
-                            <div class="liacoes">
-                                <div name="lieditar" id="<?= isset($rst['idpessoa']) ? $objFuncoes->base64($rst['idpessoa'], 1) : "" ?>" >
-                                <a class="editar" title="Editar dados"><img src="img/ico-editar.png" width="16" height="16" alt="Editar"></a></div>
-                                <!--<a class="editar" href="?acao=edit&ted=<?= isset($rst['idpessoa']) ? $objFuncoes->base64($rst['idpessoa'], 1) : "" ?>" title="Editar dados"><img src="img/ico-editar.png" width="16" height="16" alt="Editar"></a>-->
-                                <a class="excluir" href="?acao=delet&ted=<?= isset($rst['idpessoa']) ? $objFuncoes->base64($rst['idpessoa'], 1) : "" ?>" title="Excluir esse dado"><img src="img/ico-excluir.png" width="16" height="16" alt="Excluir"></a>
-                            </div>
-                        </td>
-                    </tr>
-                    <?php
+    <?php
+    if (!isset($pessoa)) { ?>
+        <table id="tabelaReservas" class="table tablesorter table-striped tabelaPacientes">
+            <thead>
+                <tr>
+                    <th scope="col">Cod</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Data Nascimento</th>
+                    <th scope="col">CPF</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                if (isset($_SESSION['logado']) && $_SESSION['logado'] == true) {
+                    foreach ($objPessoa->querySelect() as $rst) {
+                        ?>
+                        <tr>
+                            <td widht="20%" scope='row' ><?php echo isset($rst['idpessoa']) ? $rst['idpessoa'] : "-"; ?></td>
+                            <td widht="25%"><?php echo isset($rst['nome']) ? $objFuncoes->tratarCaracter($rst['nome'], 2) : "-"; ?></td>
+                            <td widht="10%"><?php echo isset($rst['dataNascimento']) ? $rst['dataNascimento'] : "-"; ?></td>
+                            <td widht="25%"><?php echo isset($rst['cpf']) ? $rst['cpf'] : "-"; ?></td>
+                            <td widht="20%">
+                                <div class="liacoes">
+                                    <div name="lieditar" id="<?= isset($rst['idpessoa']) ? $objFuncoes->base64($rst['idpessoa'], 1) : "" ?>" >
+                                        <a class="editar" title="Editar dados"><img src="img/ico-editar.png" width="16" height="16" alt="Editar"></a></div>
+                                        <!--<a class="editar" href="?acao=edit&ted=" title="Editar dados"><img src="img/ico-editar.png" width="16" height="16" alt="Editar"></a>-->
+                                    <a class="excluir" href="?acao=delet&ted=<?= isset($rst['idpessoa']) ? $objFuncoes->base64($rst['idpessoa'], 1) : "" ?>" title="Excluir esse dado"><img src="img/ico-excluir.png" width="16" height="16" alt="Excluir"></a>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php
+                    }
                 }
-            }
-            ?>
-        </tbody>
-    </table>
+                ?>
+            </tbody>
+        </table>
+    <?php } ?>
 </div>

@@ -104,6 +104,30 @@ class Funcoes {
         return $rst;
     }
 
+    public function convertData($data, $format) {
+        switch ($format) {
+            case 1:
+                $data = explode('-', $data);
+                $data = $data[2] . '/' . $data[1] . '/' . $data[0];
+                
+                break;
+            case 2:
+                $data = explode('/', $data);
+                $data = $data[2] . '-' . $data[1] . '-' . $data[0];
+                
+                break;
+        }
+        return $data;
+    }
+
+    /**
+     * 
+     * @param type $vlr
+     * @param type $tipo 
+     * <br> 1: base64_encode
+     * <br> 2: base64_decode
+     * @return type
+     */
     public function base64($vlr, $tipo) {
         switch ($tipo) {
             case 1: $rst = base64_encode($vlr);

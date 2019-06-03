@@ -41,7 +41,7 @@ class Conexao {
                 return self::$pdo;
             }
         } catch (Exception $exc) {
-            echo $ex->getMessage();
+            return $ex->getMessage();
         }
     }
 
