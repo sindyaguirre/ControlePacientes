@@ -49,8 +49,9 @@ class Pessoa {
     public function querySeleciona($dado) {
         try {
             $this->idpessoa = $dado;
-            $select = $this->con->conectar()->prepare("SELECT * FROM `pessoa` WHERE `idpessoa = :idpess;");
-            $select->bindParam(":idpess", $this->idpessoa, PDO::PARAM_INT);
+            $select = $this->con->conectar()->prepare("SELECT * FROM `pessoa` WHERE `idpessoa = :idpessoa;");
+            $select->bindParam(":idpessoa", $this->idpessoa, PDO::PARAM_INT);
+
             $select->execute();
             return $select->fetch();
         } catch (Exception $ex) {
@@ -58,21 +59,19 @@ class Pessoa {
         }
     }
 
-    /**
+ /**
      * 
      * @return type
      */
     public function querySelect() {
         try {
-            $select = $this->conectar()->prepare("SELECT * FROM `pessoa`;");
-
-                    $select->execute();
+            $select = $this->con->conectar()->prepare("SELECT * FROM `pessoa`;");
+            $select->execute();
             return $select->fetchAll();
         } catch (Exception $ex) {
             return 'erro ' . $ex->getMessage();
         }
     }
-
     /**
      * 
      * @param type $dados
@@ -110,7 +109,8 @@ class Pessoa {
 
     public function queryUpdate($dados) {
         try {
-
+            var_dump($dados);
+            die('debug');
             $this->idpessoa = $dados['idpessoa'];
             $this->nome = $this->objFuncoes->tratarCaracter($dados['nome'], 1);
             $this->idtipoPessoa = $dados['idtipoPessoa'];
