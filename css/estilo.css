@@ -1,0 +1,61 @@
+body,#formulario{
+    margin-left: 5%;
+}
+div.login{
+    width: 50%;
+    margin-left: 24%;
+}
+div#login label{
+    text-align: left;
+    padding-left: 24%;
+}
+div#login input{
+    text-align: left;
+}
+div#login{
+    text-align: center;
+    margin-left: 0%!important;
+}
+
+div.container{
+    margin-bottom: 3%;
+}
+
+form#formLogin{
+    background: #f0f0f0;
+    padding: 1px 1px 1px 1px;
+    margin-top: 3%;
+}
+
+h1{
+    padding-top: 6%!important;
+}
+.wrap{
+    width: 100%;
+}
+div.accordion-group {
+    width: 47%;
+    float: left;
+    margin-left: 1%;
+    padding-left:10px;
+}
+
+#formulario input[type="submit"]{
+    font: 20px Verdana, Geneva, sans-serif;
+    color: #fff;
+    background: cadetblue;
+    border: 0;
+    border-radius: 5px;
+    padding: 1% 5%;
+    margin: 5% 0;
+}
+
+.liacoes{
+    width:100%;
+    cursor: pointer;
+}
+.liacoes div{
+    width:45%;
+    float: left;     
+    text-align: center;
+}
