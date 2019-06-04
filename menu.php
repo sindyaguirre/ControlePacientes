@@ -8,9 +8,9 @@
             </button>
             <div class="nav-collapse">
                 <ul class="nav">
-                    <li><a href="home.php"> | Home </a></li>
-                    <li><a href="pessoa.php"> | Novo paciente </a></li>
-                    <?php echo $objFuncoes->isAdmin() ? '<li><a href="usuario.php"> | Novo Usuarios </a></li>' : "" ?>
+                    <li><a href="listarPessoas.php"> | Home </a></li>
+                    <li><a href="cadastrarPessoa.php"> | Novo paciente </a></li>
+                    <?php echo $objFuncoes->isAdmin() ? '<li><a href="cadastrarUsuario.php"> | Novo Usuario </a></li>' : "" ?>
                     <li><a href="logout.php"> | Logout | </a></li>
                 </ul>
             </div>

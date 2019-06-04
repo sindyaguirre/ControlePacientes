@@ -35,7 +35,7 @@ if (isset($_GET['acao'])) {
             break;
         case 'delet':
             if ($objUsuario->queryDelete($_GET['func']) == 'ok') {
-                header('location: /gerenciadorTarefas/usuario');
+                headerheader('location: /' . ROOT . '/usuario.php');
             } else {
                 echo '<script type="text/javascript">alert("Erro em deletar");</script>';
             }
@@ -65,12 +65,6 @@ if (isset($_GET['acao'])) {
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
 
     </head>
-
-    <script>
-        $(document).ready(function () {
-
-        })
-    </script>
     <body>
         <!--navbar-->
         <nav class="navbar navbar-fixed-top navbar-inverse">
@@ -82,7 +76,7 @@ if (isset($_GET['acao'])) {
                     </button>
                     <div class="nav-collapse">
                         <ul class="nav">
-                            <li><a href="home.php"> | Reservar </a></li>
+                            <li><a href="listarPessoas.php"> | Reservar </a></li>
                             <li><a href="sala.php"> | Salas </a></li>
                             <?php echo $objFuncoes->isAdmin() ? '<li><a href="usuario.php"> | Usuarios </a></li>' : "" ?>
                             <li><a href="logout.php"> | Logout | </a></li>

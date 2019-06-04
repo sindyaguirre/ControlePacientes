@@ -16,7 +16,7 @@ if (isset($_POST['btCadastrar'])) {
 
     if ($arrayResponse['status'] == true) {
 
-        header('location: /' . ROOT . '/home.php');
+        header('location: /' . ROOT . '/listarPessoas.php');
     }
 }
 
@@ -44,7 +44,7 @@ if (isset($_GET['acao'])) {
 
             if ($arrayResponse['status'] == true) {
                 echo '<script type="text/javascript">alert("' . $arrayResponse['msg'] . '");</script>';
-                header('location: /ControlePacientes/home.php');
+                header('location: /ControlePacientes/listarPessoas.php');
             }
             break;
     }
@@ -53,81 +53,13 @@ if (isset($_GET['acao'])) {
 include 'header.php';
 include 'menu.php';
 ?>
-<script>
-    $(document).ready(function () {
-
-        if ($("#idpessoa").val()) {
-            $("#formCadastro").css("display", 'inline');
-        }
-        $("button#cadastar").click(function (event) {
-            $("#formCadastro").css("display", 'inline');
-
-            //$("#formCadastro").css("display", 'inline');
-        });
-
-        $("button#fecharCadastro").click(function (event) {
-            $("#formCadastro").css("display", 'none');
-        });
-
-        $("a.excluir").click(function (event) {
-            return confirm('Deseja realmente excluir este registro?');
-        });
-
-        $("table td div[name='lieditar']").click(function (a, b) {
-
-
-            location.href = '/ControlePacientes/home.php?acao=edit&ted=' + this.id;
-
-        });
-    });
-</script>
 
 <div><h1 class=""><small><?php echo TITULO; ?></small></h1></div>
-<p>
-    <button type="button" class="btn btn-primary" name="cadastrar" id="cadastar">Novo paciente</button>
-    <button type="button" class="btn btn-info" name="fecharCadastro" id="fecharCadastro">Fechar Formulário</button>
-</p>
-
-<div id="formulario">
-
-    <form id="formCadastro" name="formCadastro" action="" method="post" style="display: none;">
-        <div class="container">
-            <div class="">
-
-                <label>Nome: </label><br>
-                <input type="text" id="nome" name="nome" required="required" value="<?= isset($pessoa['nome']) ? $objFuncoes->tratarCaracter($pessoa['nome'], 2) : "" ?>"><br>
-
-                <label>CPF: </label><br>
-                <input type="text" id="cpf" name="cpf" required="required" value="<?= isset($pessoa['cpf']) ? $pessoa['cpf'] : "" ?>"><br>
-
-                <label>Data nascimento: </label><br>
-                <input type="date" id="dataNascimento" name="dataNascimento" required="required" value="<?= isset($pessoa['dataNascimento']) ? $pessoa['dataNascimento']: "" ?>"><br>
-
-                <label>Sexo: </label><br>
-                <select name="sexo" id="idsexo">
-                    <?php
-                    foreach ($objFuncoes->listarSexo(2) as $key => $value) {
-                        $selected = isset($pessoa['sexo']) && $pessoa['sexo'] == $key ? "selected='true'" : false;
-                        ?>
-                        <option <?= $selected ?> value="<?= $key ?>"><?= $value ?></option>
-                    <?php } ?>
-                </select>
-            </div>
-            <div class="">
-
-                <input type="submit" name="<?= (isset($_GET['acao']) == 'edit') ? ('btAlterar') : ('btCadastrar') ?>" value="<?= (isset($_GET['acao']) == 'edit') ? ('Alterar') : ('Cadastrar') ?>">
-                <!--CRIAR BOTÃO PARA LIMPAR FORMULARIO, E VOLTAR A TELA INICIAL-->
-
-                <input type="hidden" id="idpessoa" name="func" value="<?= (isset($pessoa['idpessoa'])) ? ($objFuncoes->base64($pessoa['idpessoa'], 1)) : ('') ?>">
-            </div>
-        </div>
-    </form>
-</div>
 
 <div class="" style="">
     <?php
     if (!isset($pessoa)) { ?>
-        <table id="tabelaReservas" class="table tablesorter table-striped tabelaPacientes">
+        <table id="tabelaPacientes" class="table tablesorter table-striped tabelaPacientes">
             <thead>
                 <tr>
                     <th scope="col">Cod</th>
@@ -145,8 +77,8 @@ include 'menu.php';
                         <tr>
                             <td widht="20%" scope='row' ><?php echo isset($rst['idpessoa']) ? $rst['idpessoa'] : "-"; ?></td>
                             <td widht="25%"><?php echo isset($rst['nome']) ? $objFuncoes->tratarCaracter($rst['nome'], 2) : "-"; ?></td>
-                            <td widht="10%"><?php echo isset($rst['dataNascimento']) ? $rst['dataNascimento'] : "-"; ?></td>
-                            <td widht="25%"><?php echo isset($rst['cpf']) ? $rst['cpf'] : "-"; ?></td>
+                            <td widht="10%"><?php echo isset($rst['dataNascimento']) ? $objFuncoes->convertData($rst['dataNascimento'], 1) : "-"; ?></td>
+                            <td widht="25%"><?php echo isset($rst['cpf']) ? $objFuncoes->mascara($rst['cpf'], "###.###.###-##") : "-"; ?></td>
                             <td widht="20%">
                                 <div class="liacoes">
                                     <div name="lieditar" id="<?= isset($rst['idpessoa']) ? $objFuncoes->base64($rst['idpessoa'], 1) : "" ?>" >
@@ -164,3 +96,6 @@ include 'menu.php';
         </table>
     <?php } ?>
 </div>
+<?php
+include 'footer.php';
+?>

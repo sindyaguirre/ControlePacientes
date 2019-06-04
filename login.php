@@ -9,7 +9,7 @@ if (isset($_POST['login'])) {
     
     if ($objUsuario->login($_POST) == true) {
        
-        header('location: /' . ROOT . '/home.php');
+        header('location: /' . ROOT . '/listarPessoas.php');
     } else {
         if (isset($_SESSION['logado']) && $_SESSION['logado']==false) {
             echo '<script type="text/javascript">alert("'.$_SESSION['login_erro'].'");</script>';
@@ -21,13 +21,8 @@ if (isset($_POST['login'])) {
 include 'header.php';
 
 ?>
-    <script>
-        $(document).ready(function () {
 
-
-        });
-    </script>
-    <body>
+<body>
         <div id="login">
             <form name="formLogin" id="formLogin" action="" method="post">
                 <div class="container">
