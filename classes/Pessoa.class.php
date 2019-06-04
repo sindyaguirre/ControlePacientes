@@ -95,7 +95,7 @@ class Pessoa {
             $this->idtipoPessoa = 1; //paciente
             $this->dataNascimento = $dados['dataNascimento'];
             $this->sexo = $dados['sexo'];
-            $this->cpf = $dados['cpf'];
+            $this->cpf = $this->objFuncoes->limparMascara($dados['cpf']);
             $this->dataCadastro = $this->objFuncoes->dataAtual(2);
 
             $obj = $this->con->conectar()->prepare(
@@ -121,17 +121,12 @@ class Pessoa {
     public function queryUpdate($dados) {
         try {
             $this->idpessoa = $this->objFuncoes->base64($dados['func'], 2);
-            $this->nome = $dados['nome'];
+            $this->nome = $this->objFuncoes->tratarCaracter($dados['nome'], 1);
             $this->dataNascimento = $dados['dataNascimento'];
             $this->sexo = $dados['sexo'];
-            $this->cpf = $dados['cpf'];
+            $this->cpf = $this->objFuncoes->limparMascara($dados['cpf']);
             $obj = $this->con->conectar()->prepare(
-                    "UPDATE `pessoa` SET"
-                    . " `nome` = :nome,"
-                    . "`dataNascimento` = :dataNascimento "
-                    . "`sexo` = :sexo"
-                    . "`cpf` = :cpf"
-                    . "WHERE `idpessoa` = :idpessoa;");
+                    "UPDATE `pessoa` SET `nome` = :nome, `dataNascimento` = :dataNascimento, `sexo` = :sexo, `cpf` = :cpf WHERE `idpessoa` = :idpessoa;");
             $obj->bindParam(":idpessoa", $this->idpessoa, PDO::PARAM_INT);
             $obj->bindParam(":nome", $this->nome, PDO::PARAM_STR);
             $obj->bindParam(":dataNascimento", $this->dataNascimento, PDO::PARAM_STR);
