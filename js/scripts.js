@@ -14,40 +14,34 @@ $(function () {
         type: 'numeric'
     });
 
-    $('.tablesorter.tabelaReservas').tablesorter({
+    $('.tablesorter.tabelaPacientes').tablesorter({
         // Envia os cabeçalhos 
         headers: {
             5: {
                 // Desativa a ordenação para essa coluna 
                 sorter: false
             },
-            6: {
+            4: {
                 // Desativa a ordenação para essa coluna 
                 sorter: false
             }
         }
     });
-
-    $("#abrirCadastro").click(function () {
-//        $("#cadastro").diplay(true);
-//        $("#cadastro").css("display", "none");
-
-    });
     /*
-     * ao clicar no campo de turno deve abrir 
-     * a lista de horarios correspondentes ao turno selecionado
+     * 
      */
-    $("#idturno").change(function () {
-        if ($(this).val() > 1) {
-            $("#idhorario").attr("disabled", false);
-            /**
-             * chamar um ajax para listar horarios somente do respectivo turno
-             */
-        }
+    $("#cpf").mask("999.999.999-99");
+    
+    $("a.excluir").click(function (event) {
+        /**
+         * aqui será utlilizado um ajaxSubmit para esta acao
+         */
+        return confirm('Deseja realmente excluir este registro?');
     });
 
-    //botao de fechar formulário e abrir formulario
+    $("table td div[name='lieditar']").click(function (a, b) {
 
+        location.href = '/ControlePacientes/cadastrarPessoa.php?acao=edit&ted=' + this.id;
 
+    });
 });
-
