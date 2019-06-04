@@ -92,6 +92,41 @@ class Funcoes {
         return $rst;
     }
 
+    /**
+     * 
+     * @param type $val
+     * @param type $mask
+     * @ref http://blog.clares.com.br/php-mascara-cnpj-cpf-data-e-qualquer-outra-coisa/
+     * @return type
+     */
+    public function mascara($val, $mask) {
+        $maskared = '';
+        $k = 0;
+        for ($i = 0; $i <= strlen($mask) - 1; $i++) {
+            if ($mask[$i] == '#') {
+                if (isset($val[$k])) {
+                    $maskared .= $val[$k++];
+                }
+            } else {
+                if (isset($mask[$i])) {
+                    $maskared .= $mask[$i];
+                }
+            }
+        }
+        return $maskared;
+    }
+
+    /**
+     * 
+     * @param type $var
+     * @return type
+     */
+    public function limparMascara($var) {
+        $crt = array('.', '-');
+        $response = str_replace($crt, '', $var);
+        return $response;
+    }
+
     public function dataAtual($tipo) {
         switch ($tipo) {
             case 1: $rst = date("Y-m-d");
@@ -104,17 +139,29 @@ class Funcoes {
         return $rst;
     }
 
+    /**
+     * 
+     * @param type $data
+     *
+     * @param type $format
+     * <br>
+     * 1: return dd/mm/YYYY
+     * <br>
+     * 2: return YYYY-mm-dd
+     * <br>
+     *  @return string
+     */
     public function convertData($data, $format) {
         switch ($format) {
             case 1:
                 $data = explode('-', $data);
                 $data = $data[2] . '/' . $data[1] . '/' . $data[0];
-                
+
                 break;
             case 2:
                 $data = explode('/', $data);
                 $data = $data[2] . '-' . $data[1] . '-' . $data[0];
-                
+
                 break;
         }
         return $data;
