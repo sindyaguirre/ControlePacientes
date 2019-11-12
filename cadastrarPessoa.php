@@ -54,7 +54,7 @@ include 'menu.php';
             <div class="">
 
                 <label>Nome: </label><br>
-                <input type="text" id="nome" name="nome" required="required" value="<?= isset($pessoa['nome']) ? $objFuncoes->tratarCaracter($pessoa['nome'], 2) : "" ?>"><br>
+                <input type="text" id="nome" name="nome" required="required" value="<?= isset($pessoa['nome']) ? $pessoa['nome'] : "" ?>"><br>
 
                 <label>CPF: </label><br>
                 <input type="text" id="cpf" name="cpf" required="required" value="<?= isset($pessoa['cpf']) ? $pessoa['cpf'] : "" ?>"><br>

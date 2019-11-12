@@ -91,7 +91,7 @@ class Pessoa {
     public function queryInsert($dados) {
 
         try {
-            $this->nome = $this->objFuncoes->tratarCaracter($dados['nome'], 1);
+            $this->nome = $dados['nome'];
             $this->idtipoPessoa = 1; //paciente
             $this->dataNascimento = $dados['dataNascimento'];
             $this->sexo = $dados['sexo'];
@@ -121,7 +121,7 @@ class Pessoa {
     public function queryUpdate($dados) {
         try {
             $this->idpessoa = $this->objFuncoes->base64($dados['func'], 2);
-            $this->nome = $this->objFuncoes->tratarCaracter($dados['nome'], 1);
+            $this->nome = $dados['nome'];
             $this->dataNascimento = $dados['dataNascimento'];
             $this->sexo = $dados['sexo'];
             $this->cpf = $this->objFuncoes->limparMascara($dados['cpf']);

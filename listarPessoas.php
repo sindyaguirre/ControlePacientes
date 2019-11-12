@@ -1,10 +1,8 @@
 <?php
 require_once 'classes/Funcoes.class.php';
-require_once 'classes/Usuario.class.php';
 require_once 'classes/Pessoa.class.php';
 
 $objFuncoes = new Funcoes();
-$objUsuario = new Usuario();
 $objPessoa = new Pessoa();
 
 
@@ -76,7 +74,8 @@ include 'menu.php';
                         ?>
                         <tr>
                             <td widht="20%" scope='row' ><?php echo isset($rst['idpessoa']) ? $rst['idpessoa'] : "-"; ?></td>
-                            <td widht="25%"><?php echo isset($rst['nome']) ? $objFuncoes->tratarCaracter($rst['nome'], 2) : "-"; ?></td>
+                            <!--td widht="25%"><?php // echo isset($rst['nome']) ? $objFuncoes->tratarCaracter($rst['nome'], 2) : "-"; ?></td-->
+                            <td widht="25%"><?php echo isset($rst['nome']) ? $rst['nome'] : "-"; ?></td>
                             <td widht="10%"><?php echo isset($rst['dataNascimento']) ? $objFuncoes->convertData($rst['dataNascimento'], 1) : "-"; ?></td>
                             <td widht="25%"><?php echo isset($rst['cpf']) ? $objFuncoes->mascara($rst['cpf'], "###.###.###-##") : "-"; ?></td>
                             <td widht="20%">

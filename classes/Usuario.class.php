@@ -15,8 +15,8 @@ class Usuario {
     private $senha;
     private $dataCadastro;
 
-    
-    public function __construct() {
+    public function __construct()
+    {
         $this->con = new Conexao();
         $this->objFuncoes = new Funcoes();
     }
@@ -26,7 +26,8 @@ class Usuario {
      * @param type $atributo
      * @param type $valor
      */
-    public function __set($atributo, $valor) {
+    public function __set($atributo, $valor)
+    {
         $this->$atributo = $valor;
     }
 
@@ -35,7 +36,8 @@ class Usuario {
      * @param type $atributo
      * @return type
      */
-    public function __get($atributo) {
+    public function __get($atributo)
+    {
         return $this->$atributo;
     }
 
@@ -44,13 +46,25 @@ class Usuario {
      * @param type $dado
      * @return type
      */
-    public function querySeleciona($dado) {
+    public function querySeleciona($dado){
         try {
-            $this->idusuario = $dado;
-            $select = $this->con->conectar()->prepare("SELECT * FROM `usuario` WHERE `idusuario = :idusu;");
-            $select->bindParam(":idusu", $this->idusuario, PDO::PARAM_INT);
-            $select->execute();
-            return $select->fetch();
+            $this->idusuario = (int) $this->objFuncoes->base64($dado, 2);
+
+            $select = $this->con->conectar()->prepare("SELECT * FROM `usuario` WHERE `idusuario` = ?");
+            $result = $select->execute(array($this->idusuario));
+
+            //verificando se a consulta foi feita com sucesso
+            if (!$result)
+            {
+                $erro = $select->select->errorInfo();
+                exit($erro[2]);
+            }
+            //buscando os dados na linha encontrada
+            $arrayReturn = array(
+                'status' => $status = $result,
+                'arrayDados' => ( $status == true ? $select->fetch() : "")
+            );
+            return $arrayReturn;
         } catch (Exception $ex) {
             return "error " . $ex->getMessage();
         }
@@ -60,8 +74,9 @@ class Usuario {
      * 
      * @return type
      */
-    public function querySelect() {
-        try {
+    public function querySelect()
+    {
+       try {
             $select = $this->con->conectar()->prepare("SELECT * FROM `usuario`;");
             $select->execute();
             return $select->fetchAll();
@@ -75,9 +90,11 @@ class Usuario {
      * @param type $dados
      * @return string
      */
-    public function queryInsert($dados) {
+    public function queryInsert($dados)
+    {
         try {
-            $this->nome = $this->objFuncoes->tratarCaracter($dados['nome'], 1);
+//            $this->nome = $this->objFuncoes->tratarCaracter($dados['nome'], 1);
+            $this->nome = $dados['nome'];
             $this->email = $dados['email'];
             $this->usuario = $dados['usuario'];
             $this->tipoUsuario = $dados['tipoUsuario'];
@@ -94,9 +111,12 @@ class Usuario {
             $cad->bindParam(":senha", $this->senha, PDO::PARAM_STR);
             $cad->bindParam(":dt", $this->dataCadastro, PDO::PARAM_STR);
 
-            if ($cad->execute()) {
+            if ($cad->execute())
+            {
                 return 'ok';
-            } else {
+            }
+            else
+            {
                 return 'erro';
             }
         } catch (Exception $ex) {
@@ -104,10 +124,12 @@ class Usuario {
         }
     }
 
-    public function queryUpdate($dados) {
+    public function queryUpdate($dados)
+    {
         try {
             $this->idusuario = $dados['idusuario'];
-            $this->nome = $this->objFuncoes->tratarCaracter($dados['nome'], 1);
+            $this->nome = $dados['nome'];
+//            $this->nome = $this->objFuncoes->tratarCaracter($dados['nome'], 1);
             $this->usuario = $dados['usuario'];
             $this->email = $dados['email'];
             $this->tipoUsuario = $dados['tipoUsuario'];
@@ -117,9 +139,12 @@ class Usuario {
             $cst->bindParam(":nome", $this->nome, PDO::PARAM_STR);
             $cst->bindParam(":email", $this->email, PDO::PARAM_STR);
             $cst->bindParam(":tipoUsuario", $this->tipoUsuario, PDO::PARAM_INT);
-            if ($cst->execute()) {
+            if ($cst->execute())
+            {
                 return 'ok';
-            } else {
+            }
+            else
+            {
                 return 'erro';
             }
         } catch (PDOException $ex) {
@@ -127,15 +152,19 @@ class Usuario {
         }
     }
 
-    public function queryDelete($dado) {
+    public function queryDelete($dado)
+    {
 
         try {
             $this->idusuario = $this->objFuncoes->base64($dado, 2);
             $cst = $this->con->conectar()->prepare("DELETE FROM `usuario` WHERE `idusuario` = :idusu;");
             $cst->bindParam(":idusu", $this->idusuario, PDO::PARAM_INT);
-            if ($cst->execute()) {
+            if ($cst->execute())
+            {
                 return 'ok';
-            } else {
+            }
+            else
+            {
                 return 'erro';
             }
         } catch (PDOException $ex) {
@@ -143,7 +172,8 @@ class Usuario {
         }
     }
 
-    public function login($dados) {
+    public function login($dados)
+    {
         try {
 
             $this->usuario = $dados['usuario'];
@@ -152,7 +182,8 @@ class Usuario {
             $result = $select->execute(array($this->usuario));
 
             // Verifica se a consulta foi realizada com sucesso
-            if (!$result) {
+            if (!$result)
+            {
                 $erro = $select->errorInfo();
                 exit($erro[2]);
             }
@@ -160,24 +191,27 @@ class Usuario {
             // Busca os dados da linha encontrada
             $usuario = $select->fetch();
 
-            if ($usuario['senha'] === $this->objFuncoes->encript_senha($this->senha)) {
+            if ($usuario['senha'] === $this->objFuncoes->encript_senha($this->senha))
+            {
                 $_SESSION['logado'] = true;
                 $_SESSION['nomeUsuario'] = $usuario['nome'];
                 $_SESSION['tipoUsuario'] = $usuario['tipoUsuario'];
                 $_SESSION['idusuario'] = $usuario['idusuario'];
-            } else {
+            }
+            else
+            {
                 $_SESSION['logado'] = false;
                 // Preenche o erro para o usuário
                 $_SESSION['login_erro'] = 'Usuário ou senha inválidos';
-                }
+            }
             return $_SESSION['logado'];
         } catch (Exception $ex) {
-            
+
             $_SESSION['logado'] = false;
             $_SESSION['login_erro'] = $ex->getMessage();
-            
+
             return "error " . $ex->getMessage();
         }
     }
-    
+
 }

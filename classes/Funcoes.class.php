@@ -1,6 +1,7 @@
 <?php
 
 define("TITULO", 'Gerenciador de dados de pacientes');
+define("TITULO_USUARIO", 'Gerenciador de dados de usuários');
 define("ROOT", 'ControlePacientes');
 
 class Funcoes {
@@ -10,7 +11,8 @@ class Funcoes {
      * @param type $senha
      * @return type
      */
-    public function encript_senha($senha) {
+    public function encript_senha($senha)
+    {
         return md5($senha);
     }
 
@@ -20,7 +22,8 @@ class Funcoes {
      * @param type $id
      * @return string|int
      */
-    public function listarSexo($param, $id = '') {
+    public function listarSexo($param, $id = '')
+    {
 
         $arrayDados = array(
             0 => 'Selecione...',
@@ -28,7 +31,8 @@ class Funcoes {
             2 => 'Masculino',
             3 => 'Não identificado'
         );
-        switch ($param) {
+        switch ($param)
+        {
             case '1':
                 return $arrayDados[$id];
                 break;
@@ -49,19 +53,25 @@ class Funcoes {
      * @param type $id se o primeiro parametro receber 1, este é obrigatório
      * @return int
      */
-    public function tipoUsuario($param, $id = "") {
+    public function tipoUsuario($param, $id = "")
+    {
 
         $arrayDados = array(
             "Selecione...",
             "Admin",
-            "Paciente"
+            "Paciente",
+            "Recepção"
         );
-        switch ($param) {
+        switch ($param)
+        {
             case '1':
                 return $arrayDados[$id];
                 break;
 
             case '2':
+                return $arrayDados;
+                break;
+            case '3':
                 return $arrayDados;
                 break;
 
@@ -80,8 +90,10 @@ class Funcoes {
      * @param type $tipo
      * @return type
      */
-    public function tratarCaracter($vlr, $tipo) {
-        switch ($tipo) {
+    public function tratarCaracter($vlr, $tipo)
+    {
+        switch ($tipo)
+        {
             case 1: $rst = utf8_decode($vlr);
                 break;
             case 2: $rst = utf8_encode($vlr);
@@ -99,16 +111,23 @@ class Funcoes {
      * @ref http://blog.clares.com.br/php-mascara-cnpj-cpf-data-e-qualquer-outra-coisa/
      * @return type
      */
-    public function mascara($val, $mask) {
+    public function mascara($val, $mask)
+    {
         $maskared = '';
         $k = 0;
-        for ($i = 0; $i <= strlen($mask) - 1; $i++) {
-            if ($mask[$i] == '#') {
-                if (isset($val[$k])) {
+        for ($i = 0; $i <= strlen($mask) - 1; $i++)
+        {
+            if ($mask[$i] == '#')
+            {
+                if (isset($val[$k]))
+                {
                     $maskared .= $val[$k++];
                 }
-            } else {
-                if (isset($mask[$i])) {
+            }
+            else
+            {
+                if (isset($mask[$i]))
+                {
                     $maskared .= $mask[$i];
                 }
             }
@@ -121,14 +140,17 @@ class Funcoes {
      * @param type $var
      * @return type
      */
-    public function limparMascara($var) {
+    public function limparMascara($var)
+    {
         $crt = array('.', '-');
         $response = str_replace($crt, '', $var);
         return $response;
     }
 
-    public function dataAtual($tipo) {
-        switch ($tipo) {
+    public function dataAtual($tipo)
+    {
+        switch ($tipo)
+        {
             case 1: $rst = date("Y-m-d");
                 break;
             case 2: $rst = date("Y-m-d H:i:s");
@@ -151,8 +173,10 @@ class Funcoes {
      * <br>
      *  @return string
      */
-    public function convertData($data, $format) {
-        switch ($format) {
+    public function convertData($data, $format)
+    {
+        switch ($format)
+        {
             case 1:
                 $data = explode('-', $data);
                 $data = $data[2] . '/' . $data[1] . '/' . $data[0];
@@ -175,8 +199,10 @@ class Funcoes {
      * <br> 2: base64_decode
      * @return type
      */
-    public function base64($vlr, $tipo) {
-        switch ($tipo) {
+    public function base64($vlr, $tipo)
+    {
+        switch ($tipo)
+        {
             case 1: $rst = base64_encode($vlr);
                 break;
             case 2: $rst = base64_decode($vlr);
@@ -189,9 +215,11 @@ class Funcoes {
      * Funcao responsavel por verificar se esta logado, caso contrario retorna para a pagina de login
      * @return type
      */
-    public function isLogado() {
+    public function isLogado()
+    {
 
-        if (!isset($_SESSION['logado']) || $_SESSION['logado'] == false) {
+        if (!isset($_SESSION['logado']) || $_SESSION['logado'] == false)
+        {
             header('location: /ControlePacientes/login.php');
         }
         return ($_SESSION['logado']);
@@ -201,8 +229,26 @@ class Funcoes {
      * 
      * @return type
      */
-    public function isAdmin() {
+    public function isAdmin()
+    {
         return ($_SESSION['tipoUsuario'] == 1 ? TRUE : FALSE);
+    }
+
+    public function permissao($permissao = false)
+    {
+        if (($permissao == 1) && ($_SESSION['tipoUsuario'] == 1))
+        {
+            $return = true;
+        }
+        else if (($permissao == 2) && ($_SESSION['tipoUsuario'] == 1 || $_SESSION['tipoUsuario'] == 2))
+        {
+            $return = true;
+        }
+        else
+        {
+            $return = false;
+        }
+        return $return;
     }
 
 }
