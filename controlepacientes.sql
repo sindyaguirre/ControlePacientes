@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 --
 
 INSERT INTO `usuario` (`idusuario`, `nome`, `email`, `senha`, `dataCadastro`, `tipoUsuario`, `usuario`) VALUES
-(4, 'user teste', 'teste@teste.com', '2ca72350ffc67eaec75f79ac14ec7358', '2019-06-02 18:05:00', 1, 'hammer'),
+(4, 'user teste', 'teste@teste.com', '2ca72350ffc67eaec75f79ac14ec7358', '2019-06-02 18:05:00', 1, 'admin'),
 (5, 'Maria Rosa', 'maria@hotmail.com', '202cb962ac59075b964b07152d234b70', '2019-06-04 00:04:43', 1, NULL);
 COMMIT;
 
