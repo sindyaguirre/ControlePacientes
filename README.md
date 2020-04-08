@@ -15,7 +15,7 @@ a primeira página será a de login
 
 para acesso utilize o 
 
-usuario: hammer 
+usuario: admin 
 login: rId2
 
 ao acessar você será redirecionado para a página principal, a home, onde contém o menu horizontal na parte superior, e uma tabela que lista todos os pacientes cadastrados. Por esta tabela você poderá editar, ou excluir pacientes. Para adicionar novoPaciente clique no menu "Novo Paciente", onde abrirá um formulário de cadastro.
